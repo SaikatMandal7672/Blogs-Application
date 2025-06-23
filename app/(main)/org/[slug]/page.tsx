@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Dock } from 'lucide-react';
 import AllOrgBlogs from '../../components/allOrgBlogs';
+import CreateBlogDialog from '@/components/create-blog-dialog';
 
 interface OrgPageProps {
     params: {
@@ -24,23 +25,21 @@ const OrgBlogPage = async ({ params }: OrgPageProps) => {
     const queryParams = new URLSearchParams();
     queryParams.append("orgId",org.id);
     queryParams.append("userId", userId ?? '');
-    console.log(queryParams.toString());
     const href = `/create-blog?${queryParams.toString()}`
 
     return (
-        <main className='px-24 py-16 w-full min-h-screen'>
-
+        <main className='px-24 py-16 w-full min-h-screen bg-slate-100 dark:bg-neutral-950'>
+            <h1 className='text-2xl mb-2'>{org.name}</h1>
             {userId == adminId ? (
 
                 <div className='mb-10'>
-                    <div className='flex gap-x-2 mb-2'>
-                        <h1 className='text-2xl'>{org.name}</h1>
-                        <div className='bg-green-100 border-green-400 dark:bg-green-950 text-sm rounded-full px-2 py-1 border-2 dark:border-green-500'>Admin</div>
+                    <div className='flex items-center gap-x-2 mb-8'>
+                        <div className='h-2 w-2 dark:bg-slate-50 bg-black  rounded-full'></div>
+                        <div className='text-xl'>{user?.fullName}</div>
+                        <div className='bg-green-100 border-green-400 dark:bg-green-950 text-xs rounded-full px-2 py-1 border-2 dark:border-green-500'>Admin</div>
                     </div>
                     <h1 className='text-3xl font-bold tracking-wide '>Start writing blogs</h1>
-                    <Link href={href} className='flex gap-x-3 text-foreground items-center max-w-xs p-4 rounded-lg bg-emerald-100/50 dark:bg-emerald-950/20 text-2xl border-2 border-emerald-600 dark:border-green-950 mt-4'>
-                        <Dock className=' h-14 w-14 text-green-800 dark:text-green-500 bg-green-300 dark:bg-green-950 p-3 rounded-lg' /> Create new blog
-                    </Link>
+                    <CreateBlogDialog href={href}/>
                 </div>
             ) :
                 (

@@ -26,11 +26,27 @@ export default function Navbar() {
         <div className="flex items-center ">
           <ModeToggle />
           <SignedIn>
-            {theme=="dark" && <OrganizationSwitcher afterSelectOrganizationUrl={"/org/:slug"} afterCreateOrganizationUrl={"/org/:slug"} afterSelectPersonalUrl={"/dashboard"} appearance={
-              { baseTheme: dark }
-            } /> }
-            {theme=="light" && <OrganizationSwitcher afterSelectOrganizationUrl={"/org/:slug"} afterCreateOrganizationUrl={"/org/:slug"} afterSelectPersonalUrl={"/dashboard"} /> }
-            
+            {theme == "dark" &&
+              <div className="border-2 px-2 py-1 rounded-lg mr-2">
+                <OrganizationSwitcher
+                  afterSelectOrganizationUrl={"/org/:slug"}
+                  afterCreateOrganizationUrl={"/org/:slug"}
+                  afterSelectPersonalUrl={"/dashboard"}
+                  appearance={
+                    { baseTheme: dark }
+                  }
+                />
+              </div>}
+
+            {theme == "light" &&
+              <div className="border-2 px-2 py-1 rounded-lg mr-2">
+                <OrganizationSwitcher
+                  afterSelectOrganizationUrl={"/org/:slug"}
+                  afterCreateOrganizationUrl={"/org/:slug"}
+                  afterSelectPersonalUrl={"/dashboard"}
+                />
+              </div>}
+
             <UserButton />
           </SignedIn>
         </div>

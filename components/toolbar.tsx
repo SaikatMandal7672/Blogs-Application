@@ -10,10 +10,10 @@ import { BlogInterface } from '@/lib/types'
 import TextareaAutosize from "react-textarea-autosize";
 import CoverImageDialog from './cover-image-dialog'
 interface ToolbarProps {
-    initialData: BlogInterface
+    url?:string
 }
 
-const Toolbar = () => {
+const Toolbar = ({url}:ToolbarProps) => {
     const inputRef = useRef<ComponentRef<"textarea">>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [value, setValue] = useState("Untitled");
@@ -38,9 +38,9 @@ const Toolbar = () => {
     };
 
     return (
-        <div className='pl-[54px] group relative'>
+        <div className="pl-[54px] group relative">
             <div className="opacity-0  group-hover:opacity-100 flex items-center gap-x-1 py-4">
-                <CoverImageDialog />
+                <CoverImageDialog isUpload={true} imgUrl={url}/>
             </div>
             {isEditing ? (
                 <TextareaAutosize

@@ -881,6 +881,7 @@ export namespace Prisma {
 
   export type BlogsMinAggregateOutputType = {
     id: string | null
+    author: string | null
     name: string | null
     title: string | null
     content: string | null
@@ -895,6 +896,7 @@ export namespace Prisma {
 
   export type BlogsMaxAggregateOutputType = {
     id: string | null
+    author: string | null
     name: string | null
     title: string | null
     content: string | null
@@ -909,6 +911,7 @@ export namespace Prisma {
 
   export type BlogsCountAggregateOutputType = {
     id: number
+    author: number
     name: number
     title: number
     content: number
@@ -925,6 +928,7 @@ export namespace Prisma {
 
   export type BlogsMinAggregateInputType = {
     id?: true
+    author?: true
     name?: true
     title?: true
     content?: true
@@ -939,6 +943,7 @@ export namespace Prisma {
 
   export type BlogsMaxAggregateInputType = {
     id?: true
+    author?: true
     name?: true
     title?: true
     content?: true
@@ -953,6 +958,7 @@ export namespace Prisma {
 
   export type BlogsCountAggregateInputType = {
     id?: true
+    author?: true
     name?: true
     title?: true
     content?: true
@@ -1040,6 +1046,7 @@ export namespace Prisma {
 
   export type BlogsGroupByOutputType = {
     id: string
+    author: string
     name: string
     title: string | null
     content: string | null
@@ -1071,6 +1078,7 @@ export namespace Prisma {
 
   export type BlogsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    author?: boolean
     name?: boolean
     title?: boolean
     content?: boolean
@@ -1085,6 +1093,7 @@ export namespace Prisma {
 
   export type BlogsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    author?: boolean
     name?: boolean
     title?: boolean
     content?: boolean
@@ -1099,6 +1108,7 @@ export namespace Prisma {
 
   export type BlogsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    author?: boolean
     name?: boolean
     title?: boolean
     content?: boolean
@@ -1113,6 +1123,7 @@ export namespace Prisma {
 
   export type BlogsSelectScalar = {
     id?: boolean
+    author?: boolean
     name?: boolean
     title?: boolean
     content?: boolean
@@ -1125,13 +1136,14 @@ export namespace Prisma {
     isPublished?: boolean
   }
 
-  export type BlogsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "title" | "content" | "coverImage" | "userId" | "orgId" | "createdAt" | "updatedAt" | "isDraft" | "isPublished", ExtArgs["result"]["blogs"]>
+  export type BlogsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "author" | "name" | "title" | "content" | "coverImage" | "userId" | "orgId" | "createdAt" | "updatedAt" | "isDraft" | "isPublished", ExtArgs["result"]["blogs"]>
 
   export type $BlogsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Blogs"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      author: string
       name: string
       title: string | null
       content: string | null
@@ -1566,6 +1578,7 @@ export namespace Prisma {
    */
   interface BlogsFieldRefs {
     readonly id: FieldRef<"Blogs", 'String'>
+    readonly author: FieldRef<"Blogs", 'String'>
     readonly name: FieldRef<"Blogs", 'String'>
     readonly title: FieldRef<"Blogs", 'String'>
     readonly content: FieldRef<"Blogs", 'String'>
@@ -1958,6 +1971,7 @@ export namespace Prisma {
 
   export const BlogsScalarFieldEnum: {
     id: 'id',
+    author: 'author',
     name: 'name',
     title: 'title',
     content: 'content',
@@ -2059,6 +2073,7 @@ export namespace Prisma {
     OR?: BlogsWhereInput[]
     NOT?: BlogsWhereInput | BlogsWhereInput[]
     id?: StringFilter<"Blogs"> | string
+    author?: StringFilter<"Blogs"> | string
     name?: StringFilter<"Blogs"> | string
     title?: StringNullableFilter<"Blogs"> | string | null
     content?: StringNullableFilter<"Blogs"> | string | null
@@ -2073,6 +2088,7 @@ export namespace Prisma {
 
   export type BlogsOrderByWithRelationInput = {
     id?: SortOrder
+    author?: SortOrder
     name?: SortOrder
     title?: SortOrderInput | SortOrder
     content?: SortOrderInput | SortOrder
@@ -2090,6 +2106,7 @@ export namespace Prisma {
     AND?: BlogsWhereInput | BlogsWhereInput[]
     OR?: BlogsWhereInput[]
     NOT?: BlogsWhereInput | BlogsWhereInput[]
+    author?: StringFilter<"Blogs"> | string
     name?: StringFilter<"Blogs"> | string
     title?: StringNullableFilter<"Blogs"> | string | null
     content?: StringNullableFilter<"Blogs"> | string | null
@@ -2104,6 +2121,7 @@ export namespace Prisma {
 
   export type BlogsOrderByWithAggregationInput = {
     id?: SortOrder
+    author?: SortOrder
     name?: SortOrder
     title?: SortOrderInput | SortOrder
     content?: SortOrderInput | SortOrder
@@ -2124,6 +2142,7 @@ export namespace Prisma {
     OR?: BlogsScalarWhereWithAggregatesInput[]
     NOT?: BlogsScalarWhereWithAggregatesInput | BlogsScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Blogs"> | string
+    author?: StringWithAggregatesFilter<"Blogs"> | string
     name?: StringWithAggregatesFilter<"Blogs"> | string
     title?: StringNullableWithAggregatesFilter<"Blogs"> | string | null
     content?: StringNullableWithAggregatesFilter<"Blogs"> | string | null
@@ -2138,6 +2157,7 @@ export namespace Prisma {
 
   export type BlogsCreateInput = {
     id?: string
+    author: string
     name: string
     title?: string | null
     content?: string | null
@@ -2152,6 +2172,7 @@ export namespace Prisma {
 
   export type BlogsUncheckedCreateInput = {
     id?: string
+    author: string
     name: string
     title?: string | null
     content?: string | null
@@ -2166,6 +2187,7 @@ export namespace Prisma {
 
   export type BlogsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
@@ -2180,6 +2202,7 @@ export namespace Prisma {
 
   export type BlogsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
@@ -2194,6 +2217,7 @@ export namespace Prisma {
 
   export type BlogsCreateManyInput = {
     id?: string
+    author: string
     name: string
     title?: string | null
     content?: string | null
@@ -2208,6 +2232,7 @@ export namespace Prisma {
 
   export type BlogsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
@@ -2222,6 +2247,7 @@ export namespace Prisma {
 
   export type BlogsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
@@ -2287,6 +2313,7 @@ export namespace Prisma {
 
   export type BlogsCountOrderByAggregateInput = {
     id?: SortOrder
+    author?: SortOrder
     name?: SortOrder
     title?: SortOrder
     content?: SortOrder
@@ -2301,6 +2328,7 @@ export namespace Prisma {
 
   export type BlogsMaxOrderByAggregateInput = {
     id?: SortOrder
+    author?: SortOrder
     name?: SortOrder
     title?: SortOrder
     content?: SortOrder
@@ -2315,6 +2343,7 @@ export namespace Prisma {
 
   export type BlogsMinOrderByAggregateInput = {
     id?: SortOrder
+    author?: SortOrder
     name?: SortOrder
     title?: SortOrder
     content?: SortOrder

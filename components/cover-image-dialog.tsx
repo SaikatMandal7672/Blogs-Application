@@ -10,42 +10,44 @@ import {
     type UploadFn,
 } from '@/components/upload/uploader-provider';
 import { useEdgeStore } from '@/lib/edgestore';
-import { useParams, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { UploadCoverImage } from '@/lib/actions/uploadImage'
 
-const CoverImageDialog = () => {
+const CoverImageDialog = ({ isUpload ,imgUrl}: { isUpload: Boolean , imgUrl?:string}) => {
     const params = useSearchParams();
     const docId = params.get("id") as string;
-    console.log("id= ", docId );
     const { edgestore } = useEdgeStore();
     const uploadFn: UploadFn = React.useCallback(
         async ({ file, onProgressChange, signal }) => {
+
             const res = await edgestore.publicFiles.upload({
                 file,
                 signal,
                 onProgressChange,
+                options:{
+                    replaceTargetUrl:imgUrl
+                }
             });
-            // you can run some server action or api here
-            // to add the necessary data to your database
-            
-            console.log(res.url);
             const url = res.url;
             await UploadCoverImage({ url, docId })
             return res;
+
         },
         [edgestore],
     );
     return (
         <Dialog>
             <DialogTrigger>
-                <div
-                    onClick={() => console.log("clicked on add image button")}
-                    className="text-muted-foreground text-xs flex gap-x-1 border-muted-foreground border p-1 rounded-sm"
+                {!imgUrl && <div
+                    className="bg-slate-800 text-white text-xs flex gap-x-1 border-white border p-2 rounded-md "
                 >
                     <ImageIcon className="h-4 w-4" />
-                    Add Cover
+                    {
+                        isUpload ?
+                            "Add Cover" : "Update Cover Image"
+                    }
 
-                </div>
+                </div>}
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader className='flex'>

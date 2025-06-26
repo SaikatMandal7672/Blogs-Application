@@ -16,6 +16,7 @@ datasource db {
 
 model Blogs{
   id          String @id @default(uuid())
+  author      String
   name        String
   title       String? @default("Untitled")
   content     String?

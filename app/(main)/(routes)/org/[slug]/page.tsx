@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dock } from 'lucide-react';
 import AllOrgBlogs from '../../../components/allOrgBlogs';
 import CreateBlogDialog from '@/components/create-blog-dialog';
+import { GetBlogData } from '@/lib/actions/getBlogData';
 
 interface OrgPageProps {
     params: {
@@ -20,12 +21,14 @@ const OrgBlogPage = async ({ params }: OrgPageProps) => {
     const org = await clerkClient.organizations.getOrganization({ slug });
     const user = await currentUser();
     const userId = user?.id || "";
+    const author = user?.fullName || "none";
     const adminId = org.createdBy;
-
     const queryParams = new URLSearchParams();
     queryParams.append("orgId",org.id);
     queryParams.append("userId", userId || " ");
     const href = `/create-blog?${queryParams.toString()}`
+
+    
 
     return (
         <main className='px-24 py-16 w-full min-h-screen bg-slate-100 dark:bg-neutral-950'>
@@ -39,7 +42,7 @@ const OrgBlogPage = async ({ params }: OrgPageProps) => {
                         <div className='bg-green-100 border-green-400 dark:bg-green-950 text-xs rounded-full px-2 py-1 border-2 dark:border-green-500'>Admin</div>
                     </div>
                     <h1 className='text-3xl font-bold tracking-wide '>Start writing blogs</h1>
-                    <CreateBlogDialog userId={userId} orgId={org.id}/>
+                    <CreateBlogDialog userId={userId} orgId={org.id} author={author}/>
                 </div>
             ) :
                 (

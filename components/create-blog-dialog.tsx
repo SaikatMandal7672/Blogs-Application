@@ -10,26 +10,26 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 
 
-const CreateBlogDialog = ({ userId, orgId }: { userId: string, orgId?: string }) => {
+const CreateBlogDialog = ({ userId, author, orgId }: { userId: string, author: string, orgId?: string }) => {
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
     const [name, setName] = useState("");
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         try {
             setIsLoading(true)
             const res = await CreateBlogAction({
+                author:author,
                 name: name,
                 title: "untitled",
                 userId,
-                orgId,
+                orgId: orgId,
                 updatedAt: new Date(),
                 createdAt: new Date(),
             });
 
-            console.log("Response:", res); // Debug: Check what's in the response
+           
 
             if (res && res.id) {
                 const queryParams = new URLSearchParams();

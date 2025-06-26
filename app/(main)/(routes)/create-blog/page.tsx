@@ -8,24 +8,24 @@ import { BlogInterface } from '@/lib/types'
 import { Skeleton } from '@/components/ui/skeleton'
 import Editor from '@/components/editor'
 import { useSavingStatus } from '@/hooks/use-saving-status'
-import { SaveIcon } from 'lucide-react'
+import { Loader, SaveIcon } from 'lucide-react'
 
 const CreateBlog = () => {
   const [blogData, setBlogData] = useState<BlogInterface | null>(null)
-  const {isSaving} = useSavingStatus()
-  const params  = useSearchParams()
+  const { isSaving } = useSavingStatus()
+  const params = useSearchParams()
   const docId = params.get("id") || undefined
 
-  useEffect(()=>{
-    const fetchData = async () =>{
+  useEffect(() => {
+    const fetchData = async () => {
       const res = await GetBlogData(docId)
       setBlogData(res)
-    } ;
+    };
     fetchData();
   })
   const onChange = (content: string) => {
-    
-    console.log("on change logs:\n",content)
+
+    console.log("on change logs:\n", content)
   };
 
   if (!blogData)
@@ -44,15 +44,20 @@ const CreateBlog = () => {
 
   return (
     <div className='pb-40 relative'>
-      <div className='fixed right-0 mr-6 mt-6 bg-slate-800 px-3 text-md'>{isSaving ? "saving...":(
-        <>
-          <SaveIcon className='h-4 w-4'/>
-        </>
-      )}</div>
-      <CoverImage url={blogData?.coverImage || undefined} id={docId}/>
+      <div className='fixed z-50 flex gap-x-1 items-center right-0 mr-6 mt-2 bg-emerald-100 text-green-900 border border-emerald-600 px-3 py-2 text-sm rounded-lg lg:w-28'>
+        {isSaving ? (<>
+            <Loader className='h-4 w-4 animate-spin' /> <span className='hidden lg:block'>Saving...</span>
+          </>):
+          (
+            <>
+              <SaveIcon className='h-4 w-4' /> <span className='hidden w-0 lg:block lg:w-full'>Saved</span>
+            </>
+          )}
+      </div>
+      <CoverImage url={blogData?.coverImage || undefined} id={docId} />
       <div className='md:max-w-3xl lg:max-w-4xl mx-auto'>
         <Toolbar url={blogData?.coverImage || undefined} />
-        <Editor 
+        <Editor
           initialContent={blogData?.content ?? undefined}
           onChange={onChange}
           editable={true}

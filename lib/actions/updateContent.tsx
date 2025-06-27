@@ -9,7 +9,7 @@ export const UpdateContent = async(content:string,id:string)=>{
         },
         data:{
             content:content,
-            updatedAt: new Date()
+            updatedAt: new Date(),
         }
     })
 

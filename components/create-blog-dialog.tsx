@@ -24,7 +24,7 @@ const CreateBlogDialog = ({ userId, author, orgId }: { userId: string, author: s
                 name: name,
                 title: "untitled",
                 userId,
-                orgId: orgId,
+                orgId: orgId as string,
                 updatedAt: new Date(),
                 createdAt: new Date(),
             });

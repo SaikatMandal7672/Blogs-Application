@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
@@ -30,6 +30,7 @@ export default function Editor({
     const { resolvedTheme } = useTheme();
     const { edgestore } = useEdgeStore();
     const latestEditorRef = useRef<SaveToDBEditor | null>(null);
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
     const uploadFile = async (file: File) => {
         const res = await edgestore.publicFiles.upload({
@@ -38,15 +39,15 @@ export default function Editor({
         return res.url;
     };
     const saveToDB = async (editor: SaveToDBEditor) => {
-        
         if (id) {
             try {
                 savingStatus.onIsSaving()
                 console.log("Auto-saving to DB:", savingStatus.isSaving);
-                const res = await UpdateContent(
+                await UpdateContent(
                     JSON.stringify(editor.document, null, 2),
                     id
                 )
+                setHasUnsavedChanges(false);
             } catch (error) {
                 console.log(error);
             }
@@ -67,26 +68,30 @@ export default function Editor({
         uploadFile,
     });
 
-    // Auto-save effect
+    // Debounced auto-save effect
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (latestEditorRef.current) {
+        if (!hasUnsavedChanges || !latestEditorRef.current) return;
+
+        const timeoutId = setTimeout(() => {
+            if (latestEditorRef.current && hasUnsavedChanges) {
                 saveToDB(latestEditorRef.current);
             }
-        }, 10000); // 10 seconds
-        return () => clearInterval(interval);
-    }, []);
+        }, 3000); // Save 3 seconds after last change
+
+        return () => clearTimeout(timeoutId);
+    }, [hasUnsavedChanges]); // Only run when there are unsaved changes
 
     // Renders the editor instance using a React component.
     return (
         <BlockNoteView
-            className="min-h-screen  dark:bg-[#1E1F1E] rounded-md"
+            className="min-h-screen p-8 dark:bg-[#1E1F1E] rounded-md"
             theme={resolvedTheme == "dark" ? "dark" : "light"}
             editor={editor}
             editable={editable}
             onChange={(editor) => {
                 onChange(JSON.stringify(editor.document, null, 2));
                 latestEditorRef.current = editor;
+                setHasUnsavedChanges(true);
             }}
         />
     );

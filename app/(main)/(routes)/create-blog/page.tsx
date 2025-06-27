@@ -1,31 +1,29 @@
-'use client'
-import CoverImage from '@/components/cover-image'
-import Toolbar from '@/components/toolbar'
-import { GetBlogData } from '@/lib/actions/getBlogData'
-import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
-import { BlogInterface } from '@/lib/types'
-import { Skeleton } from '@/components/ui/skeleton'
-import Editor from '@/components/editor'
-import { useSavingStatus } from '@/hooks/use-saving-status'
-import { Loader, SaveIcon } from 'lucide-react'
+"use client";
+import CoverImage from "@/components/cover-image";
+import Toolbar from "@/components/toolbar";
+import { GetBlogData } from "@/lib/actions/getBlogData";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { BlogInterface } from "@/lib/types";
+import { Skeleton } from "@/components/ui/skeleton";
+import Editor from "@/components/editor";
+import { useSavingStatus } from "@/hooks/use-saving-status";
+import { Loader, SaveIcon } from "lucide-react";
 
 const CreateBlog = () => {
-  const [blogData, setBlogData] = useState<BlogInterface | null>(null)
-  const { isSaving } = useSavingStatus()
-  const params = useSearchParams()
-  const docId = params.get("id") || undefined
+  const [blogData, setBlogData] = useState<BlogInterface | null>(null);
+  const { isSaving } = useSavingStatus();
+  const params = useSearchParams();
+  const docId = params.get("id") as string;
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await GetBlogData(docId)
-      setBlogData(res)
+      const res = await GetBlogData(docId);
+      setBlogData(res);
     };
     fetchData();
-  })
+  }, [docId]); // ✅ Added dependency array
   const onChange = (content: string) => {
-
-    console.log("on change logs:\n", content)
   };
 
   if (!blogData)
@@ -41,22 +39,26 @@ const CreateBlog = () => {
       </div>
     );
 
-
   return (
-    <div className='pb-40 relative'>
-      <div className='fixed z-50 flex gap-x-1 items-center right-0 mr-6 mt-2 bg-emerald-100 text-green-900 border border-emerald-600 px-3 py-2 text-sm rounded-lg lg:w-28'>
-        {isSaving ? (<>
-            <Loader className='h-4 w-4 animate-spin' /> <span className='hidden lg:block'>Saving...</span>
-          </>):
-          (
-            <>
-              <SaveIcon className='h-4 w-4' /> <span className='hidden w-0 lg:block lg:w-full'>Saved</span>
-            </>
-          )}
+    <div className="pb-40 relative">
+      <div className="fixed z-50 flex gap-x-1 items-center right-0 mr-6 mt-2 bg-emerald-100 text-green-900 border border-emerald-600 px-3 py-2 text-sm rounded-lg lg:w-28">
+        {isSaving ? (
+          <>
+            <Loader className="h-4 w-4 animate-spin" />{" "}
+            <span className="hidden lg:block">Saving...</span>
+          </>
+        ) : (
+          <>
+            <SaveIcon className="h-4 w-4" />{" "}
+            <span className="hidden w-0 lg:block lg:w-full">Saved</span>
+          </>
+        )}
       </div>
       <CoverImage url={blogData?.coverImage || undefined} id={docId} />
-      <div className='md:max-w-3xl lg:max-w-4xl mx-auto'>
-        <Toolbar url={blogData?.coverImage || undefined} />
+      <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
+        <Toolbar url={blogData?.coverImage || undefined} id={docId} 
+          title={blogData?.title as string}
+        />
         <Editor
           initialContent={blogData?.content ?? undefined}
           onChange={onChange}
@@ -65,7 +67,7 @@ const CreateBlog = () => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateBlog
+export default CreateBlog;

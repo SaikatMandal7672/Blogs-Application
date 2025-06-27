@@ -1,22 +1,24 @@
-import { ImageIcon } from 'lucide-react'
 import React from 'react'
 import {
     ComponentRef,
     useRef,
     useState
 } from 'react'
-import { Button } from './ui/button'
-import { BlogInterface } from '@/lib/types'
 import TextareaAutosize from "react-textarea-autosize";
 import CoverImageDialog from './cover-image-dialog'
+import { UpdateBlogTitle } from '@/lib/actions/updateBlogTitle';
+import { toast } from 'sonner';
 interface ToolbarProps {
-    url?:string
+    url?: string;
+    id?: string;
+    title?:string
+
 }
 
-const Toolbar = ({url}:ToolbarProps) => {
+const Toolbar = ({ url, id , title}: ToolbarProps) => {
     const inputRef = useRef<ComponentRef<"textarea">>(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [value, setValue] = useState("Untitled");
+    const [value, setValue] = useState(title);
     const enableInput = () => {
         setIsEditing(true);
         setTimeout(() => {
@@ -26,21 +28,31 @@ const Toolbar = ({url}:ToolbarProps) => {
     };
     const disableInput = () => setIsEditing(false);
 
-    const onInput = (value: string) => {
+    const onInput = async (value: string) => {
         setValue(value);
+        
+        
     };
 
-    const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const onKeyDown =async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (event.key === "Enter") {
             event.preventDefault();
             disableInput();
+            try {
+                const res = await UpdateBlogTitle(value,id);
+                console.log(res);
+                toast.success("Title updated")
+            } catch (error) {
+                toast.error("Server error occured trying to update title")
+                console.log("\nError:-\n", error)
+            }
         }
     };
 
     return (
         <div className="pl-[54px] group relative">
             <div className="opacity-0  group-hover:opacity-100 flex items-center gap-x-1 py-4">
-                <CoverImageDialog isUpload={true} imgUrl={url}/>
+                <CoverImageDialog isUpload={true} imgUrl={url} />
             </div>
             {isEditing ? (
                 <TextareaAutosize

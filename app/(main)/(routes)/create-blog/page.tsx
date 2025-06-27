@@ -7,12 +7,12 @@ import React, { useEffect, useState } from "react";
 import { BlogInterface } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import Editor from "@/components/editor";
-import { useSavingStatus } from "@/hooks/use-saving-status";
-import { Loader, SaveIcon } from "lucide-react";
+import CreateBlogNavbar from "./_components/create-blog-navbar";
+import { toast } from "sonner";
+import { PublishBlog } from "@/lib/actions/publishBlog";
 
 const CreateBlog = () => {
   const [blogData, setBlogData] = useState<BlogInterface | null>(null);
-  const { isSaving } = useSavingStatus();
   const params = useSearchParams();
   const docId = params.get("id") as string;
 
@@ -22,51 +22,57 @@ const CreateBlog = () => {
       setBlogData(res);
     };
     fetchData();
-  }, [docId]); // ✅ Added dependency array
+  }, [docId]);
   const onChange = (content: string) => {
+  };
+
+  const handlePublish = async () => {
+    try {
+      await PublishBlog(docId);
+      toast.success("Blog published successfully!");
+
+      const updatedData = await GetBlogData(docId);
+      setBlogData(updatedData);
+    } catch (error) {
+      toast.error("Failed to publish blog");
+      console.error("Publish error:", error);
+    }
   };
 
   if (!blogData)
     return (
-      <div>
-        <CoverImage.Skeleton />
-        <div className="flex flex-col gap-y-2 items-center mt-10">
-          <Skeleton className="h-14 w-[50%]" />
-          <Skeleton className="h-4 w-[80%]" />
-          <Skeleton className="h-4 w-[40%]" />
-          <Skeleton className="h-4 w-[60%]" />
+      <>
+        <CreateBlogNavbar onPublish={handlePublish} isPublished={false} />
+        <div>
+          <CoverImage.Skeleton />
+          <div className="flex flex-col gap-y-2 items-center mt-10">
+            <Skeleton className="h-14 w-[50%]" />
+            <Skeleton className="h-4 w-[80%]" />
+            <Skeleton className="h-4 w-[40%]" />
+            <Skeleton className="h-4 w-[60%]" />
+          </div>
         </div>
-      </div>
+      </>
     );
 
   return (
-    <div className="pb-40 relative">
-      <div className="fixed z-50 flex gap-x-1 items-center right-0 mr-6 mt-2 bg-emerald-100 text-green-900 border border-emerald-600 px-3 py-2 text-sm rounded-lg lg:w-28">
-        {isSaving ? (
-          <>
-            <Loader className="h-4 w-4 animate-spin" />{" "}
-            <span className="hidden lg:block">Saving...</span>
-          </>
-        ) : (
-          <>
-            <SaveIcon className="h-4 w-4" />{" "}
-            <span className="hidden w-0 lg:block lg:w-full">Saved</span>
-          </>
-        )}
+    <>
+      <CreateBlogNavbar onPublish={handlePublish} isPublished={blogData?.isPublished || false} />
+      <div className="pb-40 relative">
+        <CoverImage url={blogData?.coverImage || undefined} id={docId} />
+        <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
+          <Toolbar url={blogData?.coverImage || undefined} id={docId}
+            title={blogData?.title as string}
+          />
+          <Editor
+            initialContent={blogData?.content ?? undefined}
+            onChange={onChange}
+            editable={true}
+            id={docId}
+          />
+        </div>
       </div>
-      <CoverImage url={blogData?.coverImage || undefined} id={docId} />
-      <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
-        <Toolbar url={blogData?.coverImage || undefined} id={docId} 
-          title={blogData?.title as string}
-        />
-        <Editor
-          initialContent={blogData?.content ?? undefined}
-          onChange={onChange}
-          editable={true}
-          id={docId}
-        />
-      </div>
-    </div>
+    </>
   );
 };
 

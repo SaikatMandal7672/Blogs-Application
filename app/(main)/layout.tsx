@@ -5,8 +5,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { ClerkProvider } from "@clerk/nextjs"
 import { ThemeProvider } from "@/components/theme-provider"
-import Navbar from "./components/navbar"
-import { dark } from "@clerk/themes"
+import ConditionalNavbar from "./_components/conditional-navbar"
 import { EdgeStoreProvider } from "@/lib/edgestore"
 import { Toaster } from "sonner"
 
@@ -33,11 +32,10 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     <ClerkProvider>
-                        <Navbar />
+                        <ConditionalNavbar />
                         <EdgeStoreProvider >
-
                             {children}
-                            <Toaster richColors/>
+                            <Toaster richColors />
                         </EdgeStoreProvider>
                     </ClerkProvider>
 

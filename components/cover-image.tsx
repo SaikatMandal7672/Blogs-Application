@@ -26,7 +26,7 @@ const CoverImage = ({ id, url }: CoverImageProps) => {
     return (
         <div
             className={cn(
-                "max-w-4xl rounded-lg mx-auto h-[45vh] relative group p-8",
+                "max-w-4xl rounded-lg mx-auto h-[50vh] relative group p-8",
                 !url && "h-[10vh]",
                 url && "bg-muted"
             )}
@@ -36,7 +36,7 @@ const CoverImage = ({ id, url }: CoverImageProps) => {
                         src={url}
                         fill
                         alt="cover image"
-                        className='object-cover'
+                        className='object-contain'
 
                     />
                     <div className='absolute bottom-0 right-0 m-4 group-hover:opacity-100 opacity-0 flex gap-x-2'>

@@ -84,7 +84,7 @@ export default function Editor({
     // Renders the editor instance using a React component.
     return (
         <BlockNoteView
-            className="min-h-screen p-8 dark:bg-[#1E1F1E] rounded-md"
+            className="min-h-screen py-8 dark:bg-[#1E1F1E]  rounded-md max-w-6xl"
             theme={resolvedTheme == "dark" ? "dark" : "light"}
             editor={editor}
             editable={editable}

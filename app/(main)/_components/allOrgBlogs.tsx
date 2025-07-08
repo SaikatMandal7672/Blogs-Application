@@ -81,7 +81,7 @@ const AllOrgBlogs = ({ pageSize = 6 }: AllOrgBlogsProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* this is the Header section*/}
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Organization Blogs</h2>
@@ -91,7 +91,7 @@ const AllOrgBlogs = ({ pageSize = 6 }: AllOrgBlogsProps) => {
         </div>
       </div>
 
-      {/* Loading State */}
+      {/*this if for the  Loading action */}
       {loading && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.from({ length: pageSize }).map((_, index) => (
@@ -111,7 +111,7 @@ const AllOrgBlogs = ({ pageSize = 6 }: AllOrgBlogsProps) => {
         </div>
       )}
 
-      {/* Blogs Grid */}
+      {/*Rndering the  Blogs in Grid */}
       {!loading && blogs.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {blogs.map((blog) => (
@@ -120,7 +120,7 @@ const AllOrgBlogs = ({ pageSize = 6 }: AllOrgBlogsProps) => {
         </div>
       )}
 
-      {/* Empty State */}
+      {/* If there are no blogs this will show up */}
       {!loading && blogs.length === 0 && (
         <div className="text-center py-12">
           <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-4">

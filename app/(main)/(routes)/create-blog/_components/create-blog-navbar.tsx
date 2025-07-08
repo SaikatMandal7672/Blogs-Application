@@ -14,7 +14,7 @@ import { Loader, SaveIcon, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface CreateBlogNavbarProps {
-  onPublish?: () => void
+  onPublish?: (isPublished:boolean) => void
   isPublished?: boolean
 }
 
@@ -46,14 +46,16 @@ export default function CreateBlogNavbar({ onPublish, isPublished = false }: Cre
             )}
           </div>
           {isPublished ? (
-            <div className="flex gap-x-1 items-center justify-center bg-blue-100 dark:bg-blue-900/20 text-blue-900 dark:text-blue-400 border border-blue-600 dark:border-blue-500 px-3 py-2 text-sm rounded-lg">
-              <CheckCircle className="h-4 w-4" />
-              <span className="hidden lg:block">Published</span>
+            <div 
+            role="button"
+            onClick={() => onPublish && onPublish(false)}
+            className="flex gap-x-1 items-center justify-center bg-blue-100 dark:bg-blue-900/20 text-blue-900 dark:text-blue-400 border border-blue-600 dark:border-blue-500 px-3 py-2 text-sm rounded-lg">
+              <span className="hidden lg:block">Unpublish</span>
             </div>
           ) : (
             <Button
               variant="default"
-              onClick={onPublish}
+              onClick={()=>onPublish && onPublish(true)}
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
               Publish Blog

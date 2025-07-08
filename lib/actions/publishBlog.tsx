@@ -2,15 +2,15 @@
 
 import prisma from "@/db/prisma"
 
-export const PublishBlog = async (id: string) => {
+export const PublishBlog = async (id: string,isPublished:boolean) => {
     try {
         const res = await prisma.blogs.update({
             where: {
                 id: id,
             },
             data: {
-                isPublished: true,
-                isDraft: false,
+                isPublished: isPublished,
+                isDraft: !isPublished,
                 updatedAt: new Date(),
             }
         })

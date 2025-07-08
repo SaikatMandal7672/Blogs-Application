@@ -26,11 +26,13 @@ const CreateBlog = () => {
   const onChange = (content: string) => {
   };
 
-  const handlePublish = async () => {
+  const handlePublish = async (isPublished:boolean) => {
     try {
-      await PublishBlog(docId);
-      toast.success("Blog published successfully!");
-
+      await PublishBlog(docId,isPublished);
+      if(isPublished==true)
+        toast.success("Blog published successfully!");
+      else 
+        toast.success("Blog Unpublished successfully!");
       const updatedData = await GetBlogData(docId);
       setBlogData(updatedData);
     } catch (error) {

@@ -1,12 +1,12 @@
 'use client'
 import React from 'react'
-import { useUser } from '@clerk/nextjs'
+import { useAuth, useUser } from '@clerk/nextjs'
 const Dashboard = () => {
-  const { user } = useUser();
+  const details = useAuth();
   return (
     
     <div className='px-24'>Dashboard
-      <pre>{JSON.stringify(user?.id, null, 2)}</pre>
+      <pre>{JSON.stringify(details.orgSlug, null, 2)}</pre>
     </div>
   )
 }

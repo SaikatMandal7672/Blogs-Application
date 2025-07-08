@@ -10,6 +10,7 @@ interface GetOrgBlogsOptions {
   orderDirection?: 'asc' | 'desc'
   page?: number
   pageSize?: number
+  searchQuery?: string
 }
 
 interface PaginatedBlogsResult {
@@ -32,10 +33,11 @@ export const GetOrgBlogsWithPagination = async (
       orderBy = 'updatedAt',
       orderDirection = 'desc',
       page = 1,
-      pageSize = 10
+      pageSize = 10,
+      searchQuery
     } = options;
 
-    // Build the where clause
+    //  the where clause to make DB call
     const whereClause: any = {
       orgId: orgId
     };
@@ -45,6 +47,24 @@ export const GetOrgBlogsWithPagination = async (
       whereClause.isPublished = true;
     } else if (includeDraftsOnly) {
       whereClause.isDraft = true;
+    }
+
+    // Add search functionality
+    if (searchQuery && searchQuery.trim()) {
+      whereClause.OR = [
+        {
+          title: {
+            contains: searchQuery.trim(),
+            mode: 'insensitive'
+          }
+        },
+        {
+          content: {
+            contains: searchQuery.trim(),
+            mode: 'insensitive'
+          }
+        }
+      ];
     }
 
     // Calculate pagination
@@ -79,13 +99,13 @@ export const GetOrgBlogsWithPagination = async (
   }
 }
 
-// Convenience function to get only published blogs for an organization
+//function to get only published blogs for an organization
 export const GetOrgPublishedBlogs = async (orgId: string): Promise<BlogInterface[]> => {
   const result = await GetOrgBlogsWithPagination(orgId, { includePublishedOnly: true, pageSize: 1000 });
   return result.blogs;
 }
 
-// Convenience function to get only draft blogs for an organization
+// function to get only draft blogs for an organization
 export const GetOrgDraftBlogs = async (orgId: string): Promise<BlogInterface[]> => {
   const result = await GetOrgBlogsWithPagination(orgId, { includeDraftsOnly: true, pageSize: 1000 });
   return result.blogs;

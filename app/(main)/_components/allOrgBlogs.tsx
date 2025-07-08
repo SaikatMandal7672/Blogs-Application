@@ -7,7 +7,8 @@ import { BlogInterface } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Edit, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Edit, ChevronLeft, ChevronRight, Loader2, Search, X } from 'lucide-react'
 import Link from 'next/link'
 import BlogCard from './blog-card'
 
@@ -25,6 +26,9 @@ const AllOrgBlogs = ({ pageSize = 6 }: AllOrgBlogsProps) => {
   const [hasNextPage, setHasNextPage] = useState(false)
   const [hasPreviousPage, setHasPreviousPage] = useState(false)
 
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>('')
+
   const fetchBlogs = async (page: number) => {
     if (!organization?.id) return
 
@@ -34,7 +38,8 @@ const AllOrgBlogs = ({ pageSize = 6 }: AllOrgBlogsProps) => {
         page,
         pageSize,
         orderBy: 'updatedAt',
-        orderDirection: 'desc'
+        orderDirection: 'desc',
+        searchQuery: debouncedSearchQuery || undefined
       })
 
       setBlogs(result.blogs)
@@ -50,9 +55,19 @@ const AllOrgBlogs = ({ pageSize = 6 }: AllOrgBlogsProps) => {
     }
   }
 
+  // Debounced search query
   useEffect(() => {
-    fetchBlogs(1)
-  }, [organization?.id])
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+    }, 500) 
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  // Fetching the blogs on mount ei ther organization changes from null to something or when search content changes
+  useEffect(() => {
+    fetchBlogs(1) 
+  }, [organization?.id, debouncedSearchQuery])
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
@@ -71,6 +86,10 @@ const AllOrgBlogs = ({ pageSize = 6 }: AllOrgBlogsProps) => {
     }
   }
 
+  const clearSearch = () => {
+    setSearchQuery('')
+  }
+
   if (!organization) {
     return (
       <div className="text-center py-8">
@@ -82,16 +101,52 @@ const AllOrgBlogs = ({ pageSize = 6 }: AllOrgBlogsProps) => {
   return (
     <div className="space-y-6">
       {/* this is the Header section*/}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
         <div>
           <h2 className="text-2xl font-bold">Organization Blogs</h2>
           <p className="text-muted-foreground">
-            {loading ? <Loader2 className='h-4 w-4 animate-spin'/> : `${totalCount} blog${totalCount !== 1 ? 's' : ''} found`}
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className='h-4 w-4 animate-spin'/>
+                {debouncedSearchQuery ? 'Searching...' : 'Loading...'}
+              </span>
+            ) : (
+              <>
+                {debouncedSearchQuery ? (
+                  <span>
+                    {totalCount} result{totalCount !== 1 ? 's' : ''} for "{debouncedSearchQuery}"
+                  </span>
+                ) : (
+                  <span>
+                    {totalCount} blog{totalCount !== 1 ? 's' : ''} found
+                  </span>
+                )}
+              </>
+            )}
           </p>
+        </div>
+
+        {/* Search Input */}
+        <div className="relative w-full md:w-80">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search blogs..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 pr-10"
+          />
+          {searchQuery && (
+            <button
+              onClick={clearSearch}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </div>
 
-      {/*this if for the  Loading action */}
+      {/*this if for skeleton loading */}
       {loading && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.from({ length: pageSize }).map((_, index) => (
@@ -120,19 +175,38 @@ const AllOrgBlogs = ({ pageSize = 6 }: AllOrgBlogsProps) => {
         </div>
       )}
 
-      {/* If there are no blogs this will show up */}
+      {/* Empty State - No blogs or No search results */}
       {!loading && blogs.length === 0 && (
         <div className="text-center py-12">
           <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-4">
-            <Edit className="w-12 h-12 text-muted-foreground" />
+            {debouncedSearchQuery ? (
+              <Search className="w-12 h-12 text-muted-foreground" /> 
+            ) : (
+              <Edit className="w-12 h-12 text-muted-foreground" />
+            )}
           </div>
-          <h3 className="text-lg font-semibold mb-2">No blogs found</h3>
-          <p className="text-muted-foreground mb-4">
-            This organization hasn't created any blogs yet.
-          </p>
-          <Button asChild>
-            <Link href="/create-blog">Create Your First Blog</Link>
-          </Button>
+
+          {debouncedSearchQuery ? (
+            <>
+              <h3 className="text-lg font-semibold mb-2">No results found</h3>
+              <p className="text-muted-foreground mb-4">
+                No blogs found for "{debouncedSearchQuery}". Try a different search term.
+              </p>
+              <Button variant="outline" onClick={clearSearch}>
+                Clear Search
+              </Button>
+            </>
+          ) : (
+            <>
+              <h3 className="text-lg font-semibold mb-2">No blogs found</h3>
+              <p className="text-muted-foreground mb-4">
+                This organization hasn't created any blogs yet.
+              </p>
+              <Button asChild>
+                <Link href="/create-blog">Create Your First Blog</Link>
+              </Button>
+            </>
+          )}
         </div>
       )}
 

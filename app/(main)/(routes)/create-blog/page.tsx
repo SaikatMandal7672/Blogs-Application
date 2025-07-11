@@ -3,7 +3,7 @@ import CoverImage from "@/components/cover-image";
 import Toolbar from "@/components/toolbar";
 import { GetBlogData } from "@/lib/actions/getBlogData";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { BlogInterface } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import Editor from "@/components/editor";
@@ -11,7 +11,8 @@ import CreateBlogNavbar from "./_components/create-blog-navbar";
 import { toast } from "sonner";
 import { PublishBlog } from "@/lib/actions/publishBlog";
 
-const CreateBlog = () => {
+// Component that uses useSearchParams
+const CreateBlogContent = () => {
   const [blogData, setBlogData] = useState<BlogInterface | null>(null);
   const params = useSearchParams();
   const docId = params.get("id") as string;
@@ -75,6 +76,31 @@ const CreateBlog = () => {
         </div>
       </div>
     </>
+  );
+};
+
+// Loading component for Suspense fallback
+const CreateBlogLoading = () => (
+  <>
+    <CreateBlogNavbar onPublish={() => {}} isPublished={false} />
+    <div>
+      <CoverImage.Skeleton />
+      <div className="flex flex-col gap-y-2 items-center mt-10">
+        <Skeleton className="h-14 w-[50%]" />
+        <Skeleton className="h-4 w-[80%]" />
+        <Skeleton className="h-4 w-[40%]" />
+        <Skeleton className="h-4 w-[60%]" />
+      </div>
+    </div>
+  </>
+);
+
+//  component with Suspense boundary
+const CreateBlog = () => {
+  return (
+    <Suspense fallback={<CreateBlogLoading />}>
+      <CreateBlogContent />
+    </Suspense>
   );
 };
 
